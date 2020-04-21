@@ -1,0 +1,42 @@
+Features:		
+	Environment:
+		Platforms that just break -> (lowest possible health?)
+		Vertical moving Platforms
+		Diagonal moving Platforms
+		Sinking platforms (either constant or upon being hit)
+
+		
+	General:
+		Changing components with increased score
+		High Score file writing
+		Items (Trampoline, Shield, Rocket Ship), can double jump
+		
+	Appearance/Fluff:
+		Nicer collisions (allow all parts of player to collide all parts platform)
+			TESTING COLLISIONS
+		Player Graphic
+		Platform Graphics
+		**Background Graphics
+		Sounds???
+	
+Implemented:
+	Death at bottom
+	Score
+	"Camera moves up"
+		Platform removal
+	Random platform generation
+------- BASIC GAMEPLAY ACHIEVED -------
+	Moving platforms
+	Horizontal Wrap-around
+	1-Health Platforms
+	Decent Initialization
+	Spring Platform
+	Ethereal Platforms (blink in and out)
+	Fix dispatch to ObstacleGenerator
+	Improved PLatform Generation
+	Monsters
+	Black Holes
+	Propeller Hat
+	
+	
+	
