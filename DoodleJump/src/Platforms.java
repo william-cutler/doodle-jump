@@ -40,7 +40,7 @@ abstract class APlatform extends AGameComponent{
 	// the standard upward velocity
 	// EFFECT: Modifies the player's velocity
 	public void onPlayerCollision(Player player) {
-		player.bounce(IConstant.STD_BOUNCE_VELOCITY);
+		player.bounce(IConstant.STD_BOUNCE_VELOCITY, this.position.y - IConstant.PLATFORM_HEIGHT);
 	}
 }
 
@@ -110,7 +110,7 @@ class BrittlePlatform extends APlatform {
 	// If the Player is to bounce on a brittle platform, the player will be given
 	// the standard upward velocity and marks this platform as hit
 	public void onPlayerCollision(Player player) {
-		player.bounce(IConstant.STD_BOUNCE_VELOCITY);
+		super.onPlayerCollision(player);
 		this.hit = true;
 	}
 
@@ -145,7 +145,7 @@ class SpringPlatform extends APlatform {
 	// Have the player react to this
 	// EFFECT: Modifies the player's
 	public void onPlayerCollision(Player player) {
-		player.bounce(IConstant.SPRING_VELOCITY);
+		player.bounce(IConstant.SPRING_VELOCITY, this.position.y - IConstant.PLATFORM_HEIGHT);
 	}
 }
 
@@ -186,7 +186,7 @@ class EtherealPlatform extends APlatform {
 	// EFFECT: Modifies the player's velocity or position by calling .bounce()
 	public void onPlayerCollision(Player player) {
 		if (!this.isEthereal()) {
-			player.bounce(IConstant.STD_BOUNCE_VELOCITY);
+			super.onPlayerCollision(player);
 		}
 	}
 

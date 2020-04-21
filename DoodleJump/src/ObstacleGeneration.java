@@ -61,8 +61,8 @@ abstract class AComponentGenerator implements IComponentGenerator {
 	// position
 	// and random horizontal velocity between -10 and 10
 	IGameComponent createHorizMovingPlatform() {
-		Random r = new Random();
-		int xVel = r.nextInt(20) - 10;
+		int xVel = new RUtils().randBetween(-10, 10);
+
 		return new HorizontalMovingPlatform(new Vector2D(this.randomHorizontal(), 0), xVel);
 	}
 	
@@ -82,7 +82,7 @@ class PlatformGenerator extends AComponentGenerator {
 
 	// Constructor initializes this' spacing and 0 height gained
 	PlatformGenerator() {
-		super(new Random().nextInt(60) + 20);
+		super(new RUtils().randBetween(20, 80));
 	}
 
 	// Returns a random platform at the top of the screen according to set probabilities
@@ -103,7 +103,7 @@ class PlatformGenerator extends AComponentGenerator {
 	
 	// The amount of space is some random number from [20, 80)
 	public int nextSpacing() {
-		return new Random().nextInt(40) + 20;
+		return new RUtils().randBetween(20, 80);
 	}
 }
 
@@ -111,7 +111,7 @@ class PlatformGenerator extends AComponentGenerator {
 class HazardGenerator extends AComponentGenerator {
 		// Constructor initializes this' spacing and 0 height gained
 		HazardGenerator() {
-			super(new Random().nextInt(1000) + 500);
+			super(new RUtils().randBetween(500, 1500));
 		}
 
 		// Returns a random platform at the top of the screen according to set probabilities
@@ -128,7 +128,7 @@ class HazardGenerator extends AComponentGenerator {
 		
 		// The amount of space is some random number from [500, 1500)
 		public int nextSpacing() {
-			return new Random().nextInt(1) + 500;
+			return 500;
 		}
 }
 
@@ -136,7 +136,7 @@ class HazardGenerator extends AComponentGenerator {
 class ItemGenerator extends AComponentGenerator {
 		// Constructor initializes this' spacing and 0 height gained
 		ItemGenerator() {
-			super(new Random().nextInt(2000) + 2000);
+			super(new RUtils().randBetween(2000, 4000));
 		}
 
 		// Returns a random platform at the top of the screen according to set probabilities
@@ -147,6 +147,6 @@ class ItemGenerator extends AComponentGenerator {
 		
 		// The amount of space is some random number from [500, 1500)
 		public int nextSpacing() {
-			return new Random().nextInt(2000) + 2000;
+			return new RUtils().randBetween(2000, 4000);
 		}
 }

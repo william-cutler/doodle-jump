@@ -102,16 +102,17 @@ class Player {
 	// Have the player's vertical velocity react to a collision with a platform,
 	// bounce can only occur if already moving down
 	// EFFECT: Modifies this' velocity
-	void bounce(int newY_Velocity) {
+	void bounce(int newY_Velocity, int yPlatformTop) {
 		if (this.velocity.y < 0) {
 			throw new RuntimeException("Player already moving upwards.");
 		} else {
-			this.setYVelocity(newY_Velocity);
+			this.velocity = this.velocity.setY(newY_Velocity).addToY(IConstant.ACC_GRAVITY);
+			this.position = this.position.setY(yPlatformTop - IConstant.PLAYER_HEIGHT / 2);
 		}
 	}
 	
 	void setYVelocity(int newY_Velocity) {
-		this.velocity = this.velocity.setY(newY_Velocity).addToY(IConstant.ACC_GRAVITY);
+		this.velocity = this.velocity.setY(newY_Velocity);
 	}
 	
 	// Returns whether the player has been killed by a hazard or fallen
@@ -129,6 +130,7 @@ class Player {
 		} 
 		if(! this.item.hazardImmunity()) {
 			this.isDead = true;
+			this.velocity = Vector2D.ORIGIN;
 		}
 	}
 	
@@ -143,98 +145,6 @@ class Player {
 		if (this.item.replaceable()) {
 			this.item = item;
 		}
-	}
-}
-
-// A function object that determines if the player is colliding with the game component that parameterizes it
-interface ICollisionFunc {
-	boolean apply(Vector2D playerCurrPosn, Vector2D playerNextPosn, int playerWidth, int playerHeight);
-}
-
-// A function object that determines if the player is colliding with a rectangular game component at centered at a particular position
-abstract class ARectCollisionFunc implements ICollisionFunc{
-	Vector2D objectPosn;
-	int objectWidth;
-	int objectHeight;
-	
-	ARectCollisionFunc(Vector2D objectPosn, int objectWidth, int objectHeight) {
-		this.objectPosn = objectPosn;
-		this.objectWidth = objectWidth;
-		this.objectHeight = objectHeight;
-	}
-	
-	public abstract boolean apply(Vector2D playerCurrPosn, Vector2D playerNextPosn, int playerWidth, int playerHeight);
-
-	// Is any part of the Player (based on given values) in either the same column or same row
-	// as any part of the object checking collision?
-	boolean linearCollision(int playerSource, int playerSize, boolean checkingColumn) {
-		if(checkingColumn) {
-			return this.intervalOverlap(playerSource, playerSize, this.objectPosn.x, this.objectWidth / 2);
-		} else {
-			return this.intervalOverlap(playerSource, playerSize, this.objectPosn.y, this.objectHeight / 2);
-		}
-	}
-	
-	// Is any part of playerSource +/- playerRange overlapping with objectSource +/- objectRange, inclusive?
-	boolean intervalOverlap(int playerSource, int playerRange, int objectSource, int objectRange) {
-		int objectHigh = objectSource + objectRange;
-		int objectLow = objectSource - objectRange;
-		int playerHigh = playerSource + playerRange;
-		int playerLow = playerSource - playerRange;
-		
-		boolean playerHighWithin = this.inclusiveBetween(objectLow, playerHigh, objectHigh);
-		
-		boolean playerLowWithin = this.inclusiveBetween(objectLow, playerLow, objectHigh);
-		
-		return playerHighWithin || playerLowWithin;
-	}
-	
-	// Is the middle value inclusively between the low and high value
-	boolean inclusiveBetween(int low, int med, int high) {
-		return (low <= med && med <= high);
-	}
-}
-
-// A function object that takes in geometric information about an object to be applied
-// by the player to determine if the player is about to land on top of the object
-class WillCollideRectAbove extends ARectCollisionFunc{
-
-	WillCollideRectAbove(Vector2D objectPosn, int objectWidth, int objectHeight) {
-		super(objectPosn, objectWidth, objectHeight);
-	}
-
-	public boolean apply(Vector2D playerCurrPosn, Vector2D playerNextPosn, int playerWidth, int playerHeight) {
-		// Can't hit a platform if not moving vertically (to avoid /0 in .inverseSlope())
-		if(playerCurrPosn.y == playerNextPosn.y) {return false;}
-		
-		// Is the player about to move from above this platform to a point below it?
-		boolean aboveToBelow = this.inclusiveBetween(playerCurrPosn.y + playerHeight / 2, 
-				this.objectPosn.y + this.objectHeight / 2, playerNextPosn.y + playerHeight / 2);
-		
-		// Calculate the x-coordinate of the player at the level of this platform
-		double slope = playerCurrPosn.inverseSlope(playerNextPosn);
-		int dy = playerNextPosn.y - playerCurrPosn.y;
-		int xAtPlatform = playerCurrPosn.x + ((int) (slope * dy));
-		
-		boolean horizontalCheck = this.linearCollision(xAtPlatform, playerWidth, true);
-
-		// Both conditions must be met
-		return horizontalCheck && aboveToBelow;
-	}
-}
-
-// A function object applied by the player that determines if the player is colliding with the
-// object that initialized this function
-class WillCollideRect extends ARectCollisionFunc{
-	WillCollideRect(Vector2D objectPosn, int objectWidth, int objectHeight) {
-		super(objectPosn, objectWidth, objectHeight);
-	}
-
-	public boolean apply(Vector2D playerCurrPosn, Vector2D playerNextPosn, int playerWidth, int playerHeight) {
-		boolean horizontalCheck = this.linearCollision(playerCurrPosn.x, playerWidth, true);
-		boolean verticalCheck = this.linearCollision(playerCurrPosn.y, playerHeight, false);
-
-		return horizontalCheck && verticalCheck;
 	}
 }
 
@@ -323,7 +233,7 @@ abstract class TimeTemporaryItem implements IPlayerItem {
 class PropellerHat extends TimeTemporaryItem {
 	// Constructor initializes the propeller hat to last for 100 ticks
 	PropellerHat() {
-		super(100);
+		super(50);
 	}
 	// Draws this as a small cyan circle
 	public WorldImage render() {

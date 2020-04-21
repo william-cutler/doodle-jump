@@ -13,7 +13,7 @@ interface IGameComponent {
 	// Move this game component downward by the given amount (for camera
 	// perspective)
 	void displaceDownwards(int displacement);
-
+	
 	// Should this game component be removed?
 	boolean shouldRemove();
 
@@ -142,7 +142,7 @@ class Monster extends AGameComponent {
 	// Constructor initializes this' position and a random x velocity from [-10, 9)
 	Monster(Vector2D position) {
 		super(position);
-		this.xVel = new Random().nextInt(20) - 10;
+		this.xVel = new RUtils().randBetween(-10, 10);
 	}
 	 
 	// Depicts this monster as a Magenta square
@@ -156,7 +156,7 @@ class Monster extends AGameComponent {
 	public void interactPlayer(Player player) {
 		if(player.willCollide(new WillCollideRectAbove(this.position, IConstant.MONSTER_DIM.x, IConstant.MONSTER_DIM.y))) {
 			this.hit = true;
-			player.bounce(IConstant.STD_BOUNCE_VELOCITY);
+			player.bounce(IConstant.STD_BOUNCE_VELOCITY, this.position.y - IConstant.MONSTER_DIM.y / 2);
 		} else if(player.willCollide(new WillCollideRect(this.position, IConstant.MONSTER_DIM.x, IConstant.MONSTER_DIM.y))) {
 			player.killPlayer();
 		}
@@ -184,5 +184,13 @@ class Monster extends AGameComponent {
 	// The monster should be removed from play if it is below view or was killed by the player
 	public boolean shouldRemove() {
 		return this.belowScreen() || this.hit;
+	}
+}
+
+class RUtils {
+	int randBetween(int low, int high) {
+		int range = high - low;
+		int rand = new Random().nextInt(range + 1);
+		return low + rand;
 	}
 }

@@ -24,7 +24,7 @@ interface IConstant {
 	int PLAYER_HEIGHT = 15;
 	int TERMINAL_VELOCITY = 20;
 	
-	Vector2D MONSTER_DIM = new Vector2D(20, 20);
+	Vector2D MONSTER_DIM = new Vector2D(40, 20);
 
 	int BLACK_HOLE_RADIUS = 15;
 
@@ -245,6 +245,8 @@ class Vector2D {
 	// Like Posn class, fields do not support mutation
 	final int x;
 	final int y;
+	
+	static final Vector2D ORIGIN = new Vector2D(0, 0);
 
 	// Standard constructor initializes fields
 	Vector2D(int x, int y) {

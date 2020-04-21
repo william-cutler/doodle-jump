@@ -5,7 +5,13 @@ Features:
 		Diagonal moving Platforms
 		Sinking platforms (either constant or upon being hit)
 
-		
+	Collisions:
+		Test
+		Fix normal monster collisions
+		Improve black hole collisions
+		Monster and Platform Fix
+		Fixing position for platform collision
+	
 	General:
 		Changing components with increased score
 		High Score file writing
@@ -14,6 +20,7 @@ Features:
 	Appearance/Fluff:
 		Nicer collisions (allow all parts of player to collide all parts platform)
 			TESTING COLLISIONS
+			Platform and Monster
 		Player Graphic
 		Platform Graphics
 		**Background Graphics
