@@ -102,12 +102,11 @@ class Player {
 	// Have the player's vertical velocity react to a collision with a platform,
 	// bounce can only occur if already moving down
 	// EFFECT: Modifies this' velocity
-	void bounce(int newY_Velocity, int yPlatformTop) {
+	void bounce(int newY_Velocity) {
 		if (this.velocity.y < 0) {
 			throw new RuntimeException("Player already moving upwards.");
 		} else {
 			this.velocity = this.velocity.setY(newY_Velocity).addToY(IConstant.ACC_GRAVITY);
-			this.position = this.position.setY(yPlatformTop - IConstant.PLAYER_HEIGHT / 2);
 		}
 	}
 	
@@ -225,8 +224,14 @@ abstract class TimeTemporaryItem implements IPlayerItem {
 		return true;
 	}
 	
+	double proportionTicksLeft() {
+		return 1 - 1.0 * this.ticksSoFar / this.totalTicks;
+	}
+	
 	// Modify the player according to specific rules
-	abstract void modifyPlayer(Player player);
+	void modifyPlayer(Player player) {
+		return;
+	}
 }
 
 // An item that given the player a constant, fast upward velocity for a period of time
@@ -237,7 +242,8 @@ class PropellerHat extends TimeTemporaryItem {
 	}
 	// Draws this as a small cyan circle
 	public WorldImage render() {
-		return new CircleImage(5, OutlineMode.SOLID, Color.CYAN);
+		return new CircleImage((int) (this.proportionTicksLeft() * IConstant.ITEM_SIZE / 2), 
+				OutlineMode.SOLID, Color.CYAN);
 	}
 	
 	// The propeller hat is not replaceable
@@ -247,6 +253,47 @@ class PropellerHat extends TimeTemporaryItem {
 	
 	// Gives the player a constant upward velocity of 20 pixels per tick
 	void modifyPlayer(Player player) {
-		player.setYVelocity(-20);
+		player.setYVelocity(- IConstant.TERMINAL_VELOCITY);
+	}
+}
+
+//An item that given the player a constant, fast upward velocity for a period of time
+class JetPack extends TimeTemporaryItem {
+	// Constructor initializes the propeller hat to last for 100 ticks
+	JetPack() {
+		super(100);
+	}
+	// Draws this as a small cyan circle
+	public WorldImage render() {
+		return new CircleImage((int) (this.proportionTicksLeft() * IConstant.ITEM_SIZE / 2), 
+				OutlineMode.SOLID, Color.RED);
+	}
+	
+	// The propeller hat is not replaceable
+	public boolean replaceable() {
+		return false;
+	}
+	
+	// Gives the player a constant upward velocity of 20 pixels per tick
+	void modifyPlayer(Player player) {
+		player.setYVelocity(- IConstant.TERMINAL_VELOCITY);
+	}
+}
+
+//An item that given the player a constant, fast upward velocity for a period of time
+class Shield extends TimeTemporaryItem {
+	// Constructor initializes the propeller hat to last for 100 ticks
+	Shield() {
+		super(200);
+	}
+	// Draws this as a small orange circle
+	public WorldImage render() {
+		return new RectangleImage(IConstant.ITEM_SIZE, (int) (this.proportionTicksLeft() * IConstant.ITEM_SIZE), 
+				OutlineMode.SOLID, Color.ORANGE);
+	}
+	
+	// The propeller hat is not replaceable
+	public boolean replaceable() {
+		return true;
 	}
 }

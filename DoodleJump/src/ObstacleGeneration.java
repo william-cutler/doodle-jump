@@ -142,7 +142,17 @@ class ItemGenerator extends AComponentGenerator {
 		// Returns a random platform at the top of the screen according to set probabilities
 		// if sufficient height has been gained since the last obstacle (exception if not)
 		public IGameComponent generateComponent() {
-			return new EnvironmentItem(this.randomTopPosition(), new PropellerHat());
+			int chance = new Random().nextInt(100);
+			IPlayerItem item;
+			if(chance < 40) {
+				item = new PropellerHat();
+			} else if (chance < 60) {
+				item = new JetPack();
+			}
+			else {
+				item = new Shield();
+			}
+			return new EnvironmentItem(this.randomTopPosition(), item);
 		}
 		
 		// The amount of space is some random number from [500, 1500)

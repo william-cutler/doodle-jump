@@ -40,7 +40,7 @@ abstract class APlatform extends AGameComponent{
 	// the standard upward velocity
 	// EFFECT: Modifies the player's velocity
 	public void onPlayerCollision(Player player) {
-		player.bounce(IConstant.STD_BOUNCE_VELOCITY, this.position.y - IConstant.PLATFORM_HEIGHT);
+		player.bounce(IConstant.STD_BOUNCE_VELOCITY);
 	}
 }
 
@@ -145,7 +145,7 @@ class SpringPlatform extends APlatform {
 	// Have the player react to this
 	// EFFECT: Modifies the player's
 	public void onPlayerCollision(Player player) {
-		player.bounce(IConstant.SPRING_VELOCITY, this.position.y - IConstant.PLATFORM_HEIGHT);
+		player.bounce(IConstant.SPRING_VELOCITY);
 	}
 }
 

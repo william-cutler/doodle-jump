@@ -24,7 +24,9 @@ interface IConstant {
 	int PLAYER_HEIGHT = 15;
 	int TERMINAL_VELOCITY = 20;
 	
-	Vector2D MONSTER_DIM = new Vector2D(40, 20);
+	int ITEM_SIZE = 10;
+	
+	Vector2D MONSTER_DIM = new Vector2D(30, 30);
 
 	int BLACK_HOLE_RADIUS = 15;
 

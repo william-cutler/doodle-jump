@@ -82,7 +82,7 @@ class EnvironmentItem extends AGameComponent {
 	boolean taken;
 	final IPlayerItem item;
 
-	// Constructor initializes witht he given position and item, having not yet been taken
+	// Constructor initializes with the given position and item, having not yet been taken
 	EnvironmentItem(Vector2D position, IPlayerItem item) {
 		super(position);
 		this.item = item;
@@ -100,7 +100,7 @@ class EnvironmentItem extends AGameComponent {
 		if(this.taken) {
 			throw new RuntimeException("Item should be removed already.");
 		}
-		else if(player.willCollide(new WillCollideRect(this.position, 10, 10))) {
+		else if(player.willCollide(new WillCollideRect(this.position, IConstant.ITEM_SIZE, IConstant.ITEM_SIZE))) {
 			player.takeItem(this.item);
 			this.taken = true;
 		}
@@ -126,7 +126,7 @@ class BlackHole extends AGameComponent {
 	
 	// Kills the player if it is in contact with this Black Hole
 	public void interactPlayer(Player player) {
-		if(player.getPosition().distanceTo(this.position) + 5 < IConstant.BLACK_HOLE_RADIUS) {
+		if(player.willCollide(new CollideCircle(this.position, IConstant.BLACK_HOLE_RADIUS))) {
 			player.killPlayer();
 		}
 	}
@@ -156,7 +156,7 @@ class Monster extends AGameComponent {
 	public void interactPlayer(Player player) {
 		if(player.willCollide(new WillCollideRectAbove(this.position, IConstant.MONSTER_DIM.x, IConstant.MONSTER_DIM.y))) {
 			this.hit = true;
-			player.bounce(IConstant.STD_BOUNCE_VELOCITY, this.position.y - IConstant.MONSTER_DIM.y / 2);
+			player.bounce(IConstant.STD_BOUNCE_VELOCITY);
 		} else if(player.willCollide(new WillCollideRect(this.position, IConstant.MONSTER_DIM.x, IConstant.MONSTER_DIM.y))) {
 			player.killPlayer();
 		}

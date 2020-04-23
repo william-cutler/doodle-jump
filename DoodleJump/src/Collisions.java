@@ -4,7 +4,26 @@ interface ICollisionFunc {
 	boolean apply(Vector2D playerCurrPosn, Vector2D playerNextPosn, int playerWidth, int playerHeight);
 }
 
-// A function object that determines if the player is colliding with a rectangular game component at centered at a particular position
+// A function object that determines if the player is colliding with a circular game component by approximating the player
+// as a circle of radius = average of player width and height
+class CollideCircle implements ICollisionFunc {
+	Vector2D objectPos;
+	int radius;
+	CollideCircle(Vector2D objectPos, int radius) {
+		this.objectPos = objectPos;
+		this.radius = radius;
+	}
+	
+	public boolean apply(Vector2D playerCurrPosn, Vector2D playerNextPosn, int playerWidth, int playerHeight) {
+		double distBetweenCenters = this.objectPos.distanceTo(playerCurrPosn);
+		return distBetweenCenters < 
+				Math.sqrt(Math.pow(this.radius, 2) + Math.pow(.5 * (playerWidth + playerHeight), 2));
+	}
+
+}
+
+// A function object that determines if the player is colliding with a 
+// rectangular game component at centered at a particular position
 abstract class ARectCollisionFunc implements ICollisionFunc{
 	Vector2D objectPosn;
 	int objectWidth;
